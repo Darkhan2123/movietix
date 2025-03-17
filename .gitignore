@@ -1,0 +1,72 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+
+# Environment Variables
+.env
+.env.example
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# Shell Scripts
+fix_and_run.sh
+restart.sh
+start.sh
+
+# Documentation
+CLAUDE.md
+TROUBLESHOOTING.md
+
+# Project specific
+create_roles.py
+setup_env.py
+setup_users.py
+
+# SQLite database
+*.sqlite3
+db.sqlite3
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
