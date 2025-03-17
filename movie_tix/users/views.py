@@ -35,7 +35,7 @@ def landing_view(request):
     """
     if request.user.is_authenticated:
         return redirect('movies:movie_list')
-    return render(request, 'landing.html')  # Create a nice landing page instead of redirecting directly to login
+    return render(request, 'landing.html')
 
 def register_view(request):
     if request.method == 'POST':
@@ -47,14 +47,14 @@ def register_view(request):
 
             # Create the user but don't log them in yet
             user = User.objects.create_user(username=username, email=email, password=password)
-            
+
             # Explicitly create UserRole if it doesn't exist
             from users.models import UserRole
             customer_role, _ = UserRole.objects.get_or_create(
                 name='customer',
                 defaults={'description': 'Regular user who can book tickets'}
             )
-            
+
             # Ensure the user has a profile
             if not hasattr(user, 'profile'):
                 from users.models import Profile
@@ -88,8 +88,7 @@ def register_view(request):
 
             if email_sent:
                 messages.success(request, 'Your account has been created! Please check your email to verify your account.')
-            
-            # In DEBUG mode, automatically mark email as verified
+
             if settings.DEBUG:
                 user.profile.email_verified = True
                 user.profile.save()
@@ -232,7 +231,7 @@ def profile_view(request):
             defaults={'description': 'Regular user who can book tickets'}
         )
         profile = Profile.objects.create(user=request.user, role=customer_role)
-    
+
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
@@ -330,7 +329,7 @@ def admin_dashboard(request):
         if not hasattr(request.user, 'profile') or not request.user.profile or not request.user.profile.role:
             messages.error(request, "Your user profile is incomplete. Please contact support.")
             return redirect('movies:movie_list')
-            
+
         if request.user.profile.role.name != 'admin':
             messages.error(request, "You don't have permission to access this page")
             return redirect('movies:movie_list')
@@ -347,7 +346,7 @@ def admin_dashboard(request):
         from bookings.models import Theater
 
         context = {}
-        
+
         # User statistics with error handling
         try:
             user_count = User.objects.count()
@@ -355,7 +354,7 @@ def admin_dashboard(request):
         except Exception as e:
             logger.error(f"Error getting user count: {e}")
             context['user_count'] = 0
-            
+
         # Booking statistics with error handling
         try:
             booking_count = Booking.objects.count()
@@ -373,7 +372,7 @@ def admin_dashboard(request):
                 'confirmed_booking_count': 0,
                 'revenue': 0,
             })
-            
+
         # Recent activity with error handling
         try:
             recent_users = User.objects.order_by('-date_joined')[:10]
@@ -388,7 +387,7 @@ def admin_dashboard(request):
                 'recent_users': [],
                 'recent_bookings': [],
             })
-            
+
         # Popular movies with error handling
         try:
             popular_movies = Movie.objects.annotate(
@@ -398,7 +397,7 @@ def admin_dashboard(request):
         except Exception as e:
             logger.error(f"Error getting popular movies: {e}")
             context['popular_movies'] = []
-            
+
         # Theater statistics with error handling
         try:
             theaters = Theater.objects.all()
@@ -406,12 +405,12 @@ def admin_dashboard(request):
         except Exception as e:
             logger.error(f"Error getting theaters: {e}")
             context['theaters'] = []
-            
+
     except Exception as e:
         logger.error(f"Unexpected error in admin dashboard: {e}")
         messages.error(request, "An error occurred while loading the dashboard")
         return redirect('movies:movie_list')
-        
+
     return render(request, 'users/admin_dashboard.html', context)
 
     return render(request, 'users/admin_dashboard.html', context)

@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-<!-- Template: movies\templates\movies\movie_detail.html -->
 
 
 {% block title %}{% if movie %}{{ movie.title }}{% else %}Movie Details{% endif %} - MovieTime{% endblock %}
@@ -21,7 +20,7 @@
     </div>
 </div>
 {% else %}
-<div class="movie-hero" 
+<div class="movie-hero"
     {% if movie.backdrop_path %}
     style="background-image: linear-gradient(to bottom, rgba(10, 11, 20, 0.7), rgba(10, 11, 20, 1)), url(https://image.tmdb.org/t/p/original{{ movie.backdrop_path }})"
     {% else %}
