@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+<!-- Template: users\templates\users\admin_dashboard.html -->
+
+
+{% block title %}Admin Dashboard - MovieTix{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="admin-dashboard">
+        <h1 class="dashboard-title">Admin Dashboard</h1>
+        
+        <!-- Stats Cards Row -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Users</h3>
+                    <p class="stat-number">{{ user_count }}</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-ticket-alt"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Bookings</h3>
+                    <p class="stat-number">{{ booking_count }}</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Confirmed</h3>
+                    <p class="stat-number">{{ confirmed_booking_count }}</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Revenue</h3>
+                    <p class="stat-number">${{ revenue }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h2>Quick Actions</h2>
+            <div class="action-buttons">
+                <a href="{% url 'users:manage_users' %}" class="btn btn-primary">
+                    <i class="fas fa-user-cog"></i> Manage Users
+                </a>
+                <a href="#" class="btn btn-primary">
+                    <i class="fas fa-film"></i> Manage Movies
+                </a>
+                <a href="#" class="btn btn-primary">
+                    <i class="fas fa-building"></i> Manage Theaters
+                </a>
+                <a href="#" class="btn btn-primary">
+                    <i class="fas fa-calendar-alt"></i> Manage Showtimes
+                </a>
+            </div>
+        </div>
+        
+        <!-- Recent Activity Section -->
+        <div class="dashboard-section">
+            <div class="section-header">
+                <h2>Recent Activity</h2>
+            </div>
+            
+            <div class="dashboard-columns">
+                <!-- Recent Bookings -->
+                <div class="dashboard-column">
+                    <h3>Recent Bookings</h3>
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Reference</th>
+                                    <th>User</th>
+                                    <th>Movie</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in recent_bookings %}
+                                <tr>
+                                    <td>{{ booking.booking_reference|truncatechars:8 }}</td>
+                                    <td>{{ booking.user.username }}</td>
+                                    <td>{{ booking.showtime.movie.title|truncatechars:20 }}</td>
+                                    <td>{{ booking.booking_time|date:"M d, Y" }}</td>
+                                    <td>
+                                        <span class="status-badge status-{{ booking.status }}">
+                                            {{ booking.status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5">No recent bookings found</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Recent Users -->
+                <div class="dashboard-column">
+                    <h3>New Users</h3>
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Joined</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in recent_users %}
+                                <tr>
+                                    <td>{{ user.username }}</td>
+                                    <td>{{ user.email|truncatechars:20 }}</td>
+                                    <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3">No recent users found</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Popular Movies Section -->
+        <div class="dashboard-section">
+            <div class="section-header">
+                <h2>Popular Movies</h2>
+            </div>
+            
+            <div class="popular-movies">
+                {% for movie in popular_movies %}
+                <div class="movie-card">
+                    {% if movie.poster_path %}
+                    <div class="movie-poster">
+                        <img src="https://image.tmdb.org/t/p/w200{{ movie.poster_path }}" alt="{{ movie.title }}">
+                    </div>
+                    {% endif %}
+                    <div class="movie-info">
+                        <h4>{{ movie.title }}</h4>
+                        <p>{{ movie.booking_count }} bookings</p>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No movie data available</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Theaters Section -->
+        <div class="dashboard-section">
+            <div class="section-header">
+                <h2>Theaters</h2>
+            </div>
+            
+            <div class="theaters-grid">
+                {% for theater in theaters %}
+                <div class="theater-card">
+                    <h4>{{ theater.name }}</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> {{ theater.location }}</p>
+                    <p><i class="fas fa-chair"></i> {{ theater.total_seats }} seats</p>
+                    <div class="theater-features">
+                        {% if theater.has_imax %}
+                        <span class="feature-tag">IMAX</span>
+                        {% endif %}
+                        {% if theater.has_3d %}
+                        <span class="feature-tag">3D</span>
+                        {% endif %}
+                        {% if theater.has_parking %}
+                        <span class="feature-tag">Parking</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <p>No theaters available</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

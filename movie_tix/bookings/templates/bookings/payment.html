@@ -1,0 +1,996 @@
+{% extends "base.html" %}
+<!-- Template: bookings\templates\bookings\payment.html -->
+
+{% block title %}Payment - {{ showtime.movie.title }} - MovieTime{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Payment Page Specific Styles */
+    .payment-page {
+        padding: 2rem 0;
+    }
+
+    .payment-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+
+    .payment-left {
+        flex: 1 1 320px;
+    }
+
+    .payment-right {
+        flex: 1 1 320px;
+    }
+
+    .payment-card {
+        background-color: var(--surface);
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+
+    .payment-card-header {
+        background: linear-gradient(to right, var(--primary), #ff3465);
+        padding: 1rem 1.5rem;
+        color: white;
+    }
+
+    .payment-card-header h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .payment-card-body {
+        padding: 1.5rem;
+    }
+
+    .payment-method-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .payment-method-option {
+        flex: 1 1 calc(50% - 0.5rem);
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .payment-method-option:hover {
+        border-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .payment-method-option.active {
+        border-color: var(--primary);
+        background-color: rgba(255, 0, 64, 0.1);
+    }
+
+    .payment-method-option i {
+        font-size: 1.5rem;
+        color: var(--primary);
+    }
+
+    .payment-method-radio {
+        position: absolute;
+        opacity: 0;
+    }
+
+    /* Form Styling */
+    .form-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-section-title {
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border);
+        font-size: 1.1rem;
+        color: var(--text);
+    }
+
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-group {
+        flex: 1 1 calc(50% - 0.5rem);
+        min-width: 200px;
+    }
+
+    .form-group.full-width {
+        flex: 1 1 100%;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-size: 1rem;
+        transition: all 0.2s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(255, 0, 64, 0.2);
+    }
+
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .card-icon {
+        color: var(--text-secondary);
+        margin-right: 0.5rem;
+    }
+
+    /* Card Field Styling */
+    .card-field-wrapper {
+        position: relative;
+    }
+
+    .card-field-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+    }
+
+    .card-field-wrapper .form-control {
+        padding-right: 2.5rem;
+    }
+
+    .card-number-wrapper {
+        position: relative;
+    }
+
+    .card-brand-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.5rem;
+    }
+
+    .card-logos {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+        justify-content: flex-end;
+    }
+
+    .card-logo {
+        opacity: 0.5;
+        transition: opacity 0.2s ease;
+    }
+
+    .card-logo.active {
+        opacity: 1;
+    }
+
+    .expiry-cvv-row {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .expiry-wrapper {
+        flex: 2;
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .cvv-wrapper {
+        flex: 1;
+        position: relative;
+    }
+
+    .cvv-help {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+        cursor: help;
+    }
+
+    /* Order Summary */
+    .order-summary {
+        background-color: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+        padding: 1.25rem;
+        margin-top: 1.5rem;
+    }
+
+    .order-summary-title {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .order-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+        color: var(--text-secondary);
+    }
+
+    .order-divider {
+        height: 1px;
+        background-color: var(--border);
+        margin: 0.75rem 0;
+    }
+
+    .order-total {
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+        font-size: 1.1rem;
+        color: var(--text);
+    }
+
+    .order-total-amount {
+        color: var(--primary);
+    }
+
+    /* Discount */
+    .discount-badge {
+        display: inline-block;
+        background-color: rgba(40, 167, 69, 0.2);
+        color: #28a745;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        margin-left: 0.5rem;
+    }
+
+    /* Action Button */
+    .payment-action {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .btn-pay {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.1rem;
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-pay:hover {
+        background-color: #ff1a54;
+        transform: translateY(-2px);
+    }
+
+    .btn-pay:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Movie Info */
+    .movie-info-box {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.25rem;
+        background-color: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .movie-poster-small {
+        width: 80px;
+        height: 120px;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .movie-poster-small img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .movie-details h3 {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+        color: var(--primary);
+    }
+
+    .movie-info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.25rem;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .movie-info-item i {
+        width: 1rem;
+        color: var(--primary);
+    }
+
+    .seats-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+
+    .seat-badge {
+        background-color: rgba(255, 255, 255, 0.05);
+        padding: 0.15rem 0.35rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+    }
+
+    /* Terms and Privacy */
+    .terms-privacy {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+    }
+
+    .terms-privacy a {
+        color: var(--primary);
+        text-decoration: none;
+    }
+
+    .terms-privacy a:hover {
+        text-decoration: underline;
+    }
+
+    /* Error Message */
+    .field-error {
+        color: #dc3545;
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+    }
+
+    .form-control.error {
+        border-color: #dc3545;
+    }
+
+    /* Loading State */
+    .payment-loading {
+        position: relative;
+    }
+
+    .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        border-radius: 12px;
+        display: none;
+    }
+
+    .loading-spinner {
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top: 4px solid var(--primary);
+        width: 40px;
+        height: 40px;
+        animation: spin 2s linear infinite;
+        margin-bottom: 1rem;
+    }
+
+    .loading-text {
+        color: white;
+        font-size: 1.1rem;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .form-group {
+            flex: 1 1 100%;
+        }
+
+        .payment-method-option {
+            flex: 1 1 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container payment-page">
+    <div class="payment-loading">
+        <div class="loading-overlay" id="loading-overlay">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Processing your payment...</div>
+        </div>
+
+        <h1 class="booking-title">Complete Your Payment</h1>
+
+        <div class="payment-container">
+            <!-- Left Column: Payment Form -->
+            <div class="payment-left">
+                <div class="payment-card">
+                    <div class="payment-card-header">
+                        <h2><i class="fas fa-credit-card"></i> Payment Information</h2>
+                    </div>
+
+                    <div class="payment-card-body">
+                        <form method="post" id="payment-form" class="payment-form">
+                            {% csrf_token %}
+                            {{ form.non_field_errors }}
+
+                            <!-- Payment Method Selection -->
+                            <div class="form-section">
+                                <h3 class="form-section-title">Choose Payment Method</h3>
+
+                                <div class="payment-method-options">
+                                    <label class="payment-method-option {% if form.payment_method.value == 'card' %}active{% endif %}" for="payment-card">
+                                        <input type="radio" name="payment_method" value="card" id="payment-card" class="payment-method-radio" {% if form.payment_method.value == 'card' %}checked{% endif %}>
+                                        <i class="fas fa-credit-card"></i>
+                                        <span>Credit Card</span>
+                                    </label>
+
+                                    <label class="payment-method-option {% if form.payment_method.value == 'paypal' %}active{% endif %}" for="payment-paypal">
+                                        <input type="radio" name="payment_method" value="paypal" id="payment-paypal" class="payment-method-radio" {% if form.payment_method.value == 'paypal' %}checked{% endif %}>
+                                        <i class="fab fa-paypal"></i>
+                                        <span>PayPal</span>
+                                    </label>
+
+                                    <label class="payment-method-option {% if form.payment_method.value == 'apple_pay' %}active{% endif %}" for="payment-apple">
+                                        <input type="radio" name="payment_method" value="apple_pay" id="payment-apple" class="payment-method-radio" {% if form.payment_method.value == 'apple_pay' %}checked{% endif %}>
+                                        <i class="fab fa-apple-pay"></i>
+                                        <span>Apple Pay</span>
+                                    </label>
+
+                                    <label class="payment-method-option {% if form.payment_method.value == 'google_pay' %}active{% endif %}" for="payment-google">
+                                        <input type="radio" name="payment_method" value="google_pay" id="payment-google" class="payment-method-radio" {% if form.payment_method.value == 'google_pay' %}checked{% endif %}>
+                                        <i class="fab fa-google-pay"></i>
+                                        <span>Google Pay</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Billing Information -->
+                            <div class="form-section" id="billing-information">
+                                <h3 class="form-section-title">Billing Information</h3>
+
+                                <div class="form-group full-width">
+                                    <label for="{{ form.full_name.id_for_label }}">Full Name</label>
+                                    {{ form.full_name }}
+                                    {% if form.full_name.errors %}
+                                    <div class="field-error">{{ form.full_name.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="{{ form.email.id_for_label }}">Email Address</label>
+                                        {{ form.email }}
+                                        {% if form.email.errors %}
+                                        <div class="field-error">{{ form.email.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="{{ form.phone.id_for_label }}">Phone Number</label>
+                                        {{ form.phone }}
+                                        {% if form.phone.errors %}
+                                        <div class="field-error">{{ form.phone.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label for="{{ form.address_line1.id_for_label }}">Address Line 1</label>
+                                    {{ form.address_line1 }}
+                                    {% if form.address_line1.errors %}
+                                    <div class="field-error">{{ form.address_line1.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label for="{{ form.address_line2.id_for_label }}">Address Line 2 (Optional)</label>
+                                    {{ form.address_line2 }}
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="{{ form.city.id_for_label }}">City</label>
+                                        {{ form.city }}
+                                        {% if form.city.errors %}
+                                        <div class="field-error">{{ form.city.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="{{ form.state.id_for_label }}">State/Province</label>
+                                        {{ form.state }}
+                                        {% if form.state.errors %}
+                                        <div class="field-error">{{ form.state.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="{{ form.zip_code.id_for_label }}">ZIP/Postal Code</label>
+                                        {{ form.zip_code }}
+                                        {% if form.zip_code.errors %}
+                                        <div class="field-error">{{ form.zip_code.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="{{ form.country.id_for_label }}">Country</label>
+                                        {{ form.country }}
+                                        {% if form.country.errors %}
+                                        <div class="field-error">{{ form.country.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Credit Card Details -->
+                            <div class="form-section" id="card-details">
+                                <h3 class="form-section-title">Card Details</h3>
+
+                                <div class="form-group full-width">
+                                    <label for="{{ form.card_number.id_for_label }}">Card Number</label>
+                                    <div class="card-number-wrapper">
+                                        {{ form.card_number }}
+                                        <div class="card-brand-icon" id="card-brand-icon">
+                                            <i class="fas fa-credit-card text-muted"></i>
+                                        </div>
+                                    </div>
+                                    {% if form.card_number.errors %}
+                                    <div class="field-error">{{ form.card_number.errors.0 }}</div>
+                                    {% endif %}
+                                    <div class="card-logos">
+                                        <i class="fab fa-cc-visa card-logo" id="card-visa"></i>
+                                        <i class="fab fa-cc-mastercard card-logo" id="card-mastercard"></i>
+                                        <i class="fab fa-cc-amex card-logo" id="card-amex"></i>
+                                        <i class="fab fa-cc-discover card-logo" id="card-discover"></i>
+                                    </div>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label for="{{ form.card_holder.id_for_label }}">Name on Card</label>
+                                    {{ form.card_holder }}
+                                    {% if form.card_holder.errors %}
+                                    <div class="field-error">{{ form.card_holder.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Expiration Date</label>
+                                        <div class="expiry-wrapper">
+                                            {{ form.expiry_month }}
+                                            {{ form.expiry_year }}
+                                        </div>
+                                        {% if form.expiry_month.errors %}
+                                        <div class="field-error">{{ form.expiry_month.errors.0 }}</div>
+                                        {% endif %}
+                                        {% if form.expiry_year.errors %}
+                                        <div class="field-error">{{ form.expiry_year.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="{{ form.cvv.id_for_label }}">CVV</label>
+                                        <div class="cvv-wrapper">
+                                            {{ form.cvv }}
+                                            <i class="fas fa-question-circle cvv-help" title="3-digit security code on the back of your card (4 digits for American Express on the front)"></i>
+                                        </div>
+                                        {% if form.cvv.errors %}
+                                        <div class="field-error">{{ form.cvv.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Student Discount Section -->
+                            {% if student_price %}
+                            <div class="form-section">
+                                <h3 class="form-section-title">Discounts</h3>
+
+                                <div class="custom-control custom-checkbox">
+                                    <label for="{{ form.apply_student_discount.id_for_label }}" class="custom-control-label">
+                                        {{ form.apply_student_discount }}
+                                        Apply Student Discount ({{ discount_percentage }}% off)
+                                    </label>
+                                </div>
+
+                                <div class="student-id-field" id="student-id-field" style="{% if not form.apply_student_discount.value %}display: none;{% endif %}">
+                                    <label for="{{ form.student_id.id_for_label }}">Student ID Number</label>
+                                    {{ form.student_id }}
+                                    {% if form.student_id.errors %}
+                                    <div class="field-error">{{ form.student_id.errors.0 }}</div>
+                                    {% endif %}
+                                    <div class="form-text text-muted">
+                                        <small>{{ form.apply_student_discount.help_text }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Terms and Conditions -->
+                            <div class="form-section">
+                                <div class="custom-control custom-checkbox">
+                                    <label for="{{ form.agree_to_terms.id_for_label }}" class="custom-control-label">
+                                        {{ form.agree_to_terms }}
+                                        I agree to the <a href="#" target="_blank">Terms and Conditions</a>
+                                    </label>
+                                    {% if form.agree_to_terms.errors %}
+                                    <div class="field-error">{{ form.agree_to_terms.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Hidden Stripe token field -->
+                            {{ form.stripe_token }}
+
+                            <!-- Submit Button -->
+                            <div class="payment-action">
+                                <button type="submit" class="btn-pay" id="submit-button">
+                                    <i class="fas fa-lock"></i> Pay $<span id="payment-amount">{{ regular_price }}</span>
+                                </button>
+                            </div>
+
+                            <!-- Terms and Privacy Notice -->
+                            <div class="terms-privacy">
+                                <p>Your payment information is secured with 256-bit encryption.</p>
+                                <p>By completing this purchase, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Order Summary -->
+            <div class="payment-right">
+                <div class="payment-card">
+                    <div class="payment-card-header">
+                        <h2><i class="fas fa-shopping-cart"></i> Order Summary</h2>
+                    </div>
+
+                    <div class="payment-card-body">
+                        <!-- Movie Info Box -->
+                        <div class="movie-info-box">
+                            <div class="movie-poster-small">
+                                {% if showtime.movie.poster_path %}
+                                <img src="https://image.tmdb.org/t/p/w200{{ showtime.movie.poster_path }}" alt="{{ showtime.movie.title }}">
+                                {% else %}
+                                <div class="no-poster">
+                                    <div class="placeholder-text">
+                                        <span class="movie-title-short">{{ showtime.movie.title|slice:":1" }}</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="movie-details">
+                                <h3>{{ showtime.movie.title }}</h3>
+
+                                <div class="movie-info-item">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>{{ showtime.date|date:"D, M j, Y" }}</span>
+                                </div>
+
+                                <div class="movie-info-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>{{ showtime.time|time:"g:i A" }}</span>
+                                </div>
+
+                                <div class="movie-info-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>{{ showtime.theater.name }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="order-summary">
+                            <h3 class="order-summary-title">Booking Details</h3>
+
+                            <div class="order-item">
+                                <span>Selected Seats:</span>
+                                <div class="seats-list">
+                                    {% for seat in selected_seats %}
+                                    <span class="seat-badge">{{ seat.row }}{{ seat.number }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="order-item">
+                                <span>Number of Tickets:</span>
+                                <span>{{ selected_seats|length }}</span>
+                            </div>
+
+                            <div class="order-item">
+                                <span>Price per Ticket:</span>
+                                <span>${{ showtime.price }}</span>
+                            </div>
+
+                            {% if student_price and student_price != regular_price %}
+                            <div class="order-item student-price" id="student-price-item" style="{% if not form.apply_student_discount.value %}display: none;{% endif %}">
+                                <span>Student Price per Ticket:</span>
+                                <span>${{ showtime.student_price }}</span>
+                            </div>
+
+                            <div class="order-item discount-amount" id="discount-amount-item" style="{% if not form.apply_student_discount.value %}display: none;{% endif %}">
+                                <span>Discount Amount:</span>
+                                <span>-${{ discount_amount }}</span>
+                            </div>
+                            {% endif %}
+
+                            <div class="order-divider"></div>
+
+                            <div class="order-total">
+                                <span>Total:</span>
+                                <span class="order-total-amount" id="order-total-display">
+                                    $<span id="total-price">{% if form.apply_student_discount.value %}{{ student_price }}{% else %}{{ regular_price }}{% endif %}</span>
+                                    {% if form.apply_student_discount.value %}
+                                    <span class="discount-badge">{{ discount_percentage }}% OFF</span>
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="payment-card">
+                    <div class="payment-card-header">
+                        <h2><i class="fas fa-shield-alt"></i> Secure Payment</h2>
+                    </div>
+
+                    <div class="payment-card-body">
+                        <div class="security-info">
+                            <p><i class="fas fa-lock"></i> All payment information is encrypted with industry-standard SSL.</p>
+                            <p><i class="fas fa-credit-card"></i> We never store your complete credit card information.</p>
+                            <p><i class="fas fa-user-shield"></i> Your personal data is protected in accordance with our privacy policy.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="back-link-container">
+                    <a href="{% url 'bookings:select_seats' showtime.id %}" class="back-link">
+                        <i class="fas fa-arrow-left"></i> Back to Seat Selection
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Payment Method Selection
+        const paymentOptions = document.querySelectorAll('.payment-method-option');
+        const cardDetails = document.getElementById('card-details');
+
+        paymentOptions.forEach(option => {
+            const radio = option.querySelector('input[type="radio"]');
+
+            radio.addEventListener('change', function() {
+                // Remove active class from all options
+                paymentOptions.forEach(opt => opt.classList.remove('active'));
+
+                // Add active class to selected option
+                option.classList.add('active');
+
+                // Show/hide card details based on selection
+                if (radio.value === 'card') {
+                    cardDetails.style.display = 'block';
+                } else {
+                    cardDetails.style.display = 'none';
+                }
+            });
+        });
+
+        // Student discount handling
+        {% if student_price %}
+        const studentDiscountCheckbox = document.getElementById('{{ form.apply_student_discount.id_for_label }}');
+        const studentIdField = document.getElementById('student-id-field');
+        const studentPriceItem = document.getElementById('student-price-item');
+        const discountAmountItem = document.getElementById('discount-amount-item');
+        const totalDisplay = document.getElementById('total-price');
+        const totalContainer = document.getElementById('order-total-display');
+        const submitButton = document.getElementById('submit-button');
+        const paymentAmount = document.getElementById('payment-amount');
+
+        const regularPrice = {{ regular_price }};
+        const studentPrice = {{ student_price }};
+
+        if (studentDiscountCheckbox) {
+            studentDiscountCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    studentIdField.style.display = 'block';
+                    if (studentPriceItem) studentPriceItem.style.display = 'flex';
+                    if (discountAmountItem) discountAmountItem.style.display = 'flex';
+                    totalDisplay.innerText = studentPrice.toFixed(2);
+                    paymentAmount.innerText = studentPrice.toFixed(2);
+
+                    // Add discount badge if not present
+                    if (!totalContainer.querySelector('.discount-badge')) {
+                        const discountBadge = document.createElement('span');
+                        discountBadge.className = 'discount-badge';
+                        discountBadge.innerText = '{{ discount_percentage }}% OFF';
+                        totalContainer.appendChild(discountBadge);
+                    }
+                } else {
+                    studentIdField.style.display = 'none';
+                    if (studentPriceItem) studentPriceItem.style.display = 'none';
+                    if (discountAmountItem) discountAmountItem.style.display = 'none';
+                    totalDisplay.innerText = regularPrice.toFixed(2);
+                    paymentAmount.innerText = regularPrice.toFixed(2);
+
+                    // Remove discount badge if present
+                    const discountBadge = totalContainer.querySelector('.discount-badge');
+                    if (discountBadge) {
+                        discountBadge.remove();
+                    }
+                }
+            });
+        }
+        {% endif %}
+
+        // Credit card formatting
+        const cardNumberInput = document.getElementById('card-number');
+        if (cardNumberInput) {
+            cardNumberInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 16) {
+                    value = value.slice(0, 16);
+                }
+
+                // Format different card types differently
+                let formattedValue = '';
+                let cardType = detectCardType(value);
+
+                if (cardType === 'amex') {
+                    // Format: XXXX XXXXXX XXXXX
+                    for (let i = 0; i < value.length; i++) {
+                        if (i === 4 || i === 10) {
+                            formattedValue += ' ';
+                        }
+                        formattedValue += value[i];
+                    }
+                } else {
+                    // Format: XXXX XXXX XXXX XXXX
+                    for (let i = 0; i < value.length; i++) {
+                        if (i > 0 && i % 4 === 0) {
+                            formattedValue += ' ';
+                        }
+                        formattedValue += value[i];
+                    }
+                }
+
+                e.target.value = formattedValue;
+
+                // Update card logo display
+                updateCardBrandDisplay(cardType);
+            });
+        }
+
+        // Detect card type based on number
+        function detectCardType(number) {
+            const re = {
+                visa: /^4/,
+                mastercard: /^5[1-5]/,
+                amex: /^3[47]/,
+                discover: /^(6011|65|64[4-9]|622)/
+            };
+
+            if (re.visa.test(number)) return 'visa';
+            if (re.mastercard.test(number)) return 'mastercard';
+            if (re.amex.test(number)) return 'amex';
+            if (re.discover.test(number)) return 'discover';
+            return 'unknown';
+        }
+
+        // Update card brand display
+        function updateCardBrandDisplay(cardType) {
+            const brandIcon = document.getElementById('card-brand-icon');
+            const visaLogo = document.getElementById('card-visa');
+            const mastercardLogo = document.getElementById('card-mastercard');
+            const amexLogo = document.getElementById('card-amex');
+            const discoverLogo = document.getElementById('card-discover');
+
+            // Reset all logos
+            visaLogo.classList.remove('active');
+            mastercardLogo.classList.remove('active');
+            amexLogo.classList.remove('active');
+            discoverLogo.classList.remove('active');
+
+            // Set icon based on card type
+            if (cardType === 'visa') {
+                brandIcon.innerHTML = '<i class="fab fa-cc-visa" style="color: #1a1f71;"></i>';
+                visaLogo.classList.add('active');
+            } else if (cardType === 'mastercard') {
+                brandIcon.innerHTML = '<i class="fab fa-cc-mastercard" style="color: #eb001b;"></i>';
+                mastercardLogo.classList.add('active');
+            } else if (cardType === 'amex') {
+                brandIcon.innerHTML = '<i class="fab fa-cc-amex" style="color: #2e77bc;"></i>';
+                amexLogo.classList.add('active');
+            } else if (cardType === 'discover') {
+                brandIcon.innerHTML = '<i class="fab fa-cc-discover" style="color: #ff6600;"></i>';
+                discoverLogo.classList.add('active');
+            } else {
+                brandIcon.innerHTML = '<i class="fas fa-credit-card text-muted"></i>';
+            }
+        }
+
+        // Form submission handling
+        const paymentForm = document.getElementById('payment-form');
+
+        if (paymentForm) {
+            paymentForm.addEventListener('submit', function(e) {
+                // Prevent multiple submissions
+                const submitButton = document.getElementById('submit-button');
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+                // Show loading overlay
+                const loadingOverlay = document.getElementById('loading-overlay');
+                loadingOverlay.style.display = 'flex';
+
+                // Form will submit normally - in a production environment,
+                // we would integrate with Stripe.js here to tokenize the card
+            });
+        }
+    });
+</script>
+{% endblock %}

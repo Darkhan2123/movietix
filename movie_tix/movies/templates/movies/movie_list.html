@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+<!-- Template: movies\templates\movies\movie_list.html -->
+
+
+{% block title %}MovieTime{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="brand-section">
+        <h1 class="brand-title">MovieTix</h1>
+    </div>
+
+    <section class="movies-section">
+        <h2 class="section-title">Trending Movies</h2>
+
+        {% if not api_key_configured %}
+        <div class="alert alert-warning">
+            <strong>TMDB API Key Not Configured</strong>
+            <p>The API key for The Movie Database (TMDB) is not properly configured. Please set the TMDB_API_KEY in your .env file to display movies.</p>
+        </div>
+        {% elif not api_working %}
+        <div class="alert alert-warning">
+            <strong>API Connection Issue</strong>
+            <p>There was a problem connecting to the TMDB API. API key may be invalid or there may be connectivity issues. Using mock data instead.</p>
+        </div>
+        {% endif %}
+
+        <div class="movie-grid">
+            {% for movie in movies %}
+            <div class="movie-card">
+                <a href="{% url 'movies:movie_detail' movie.id %}" class="movie-link">
+                    <div class="movie-poster">
+                        {% if movie.poster_path %}
+                            <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
+                        {% else %}
+                            <div class="no-poster">
+                                <div class="placeholder-text">
+                                    <div class="movie-title-short">{{ movie.title }}</div>
+                                    {% if movie.release_date %}
+                                        <div class="movie-year">{{ movie.release_date|slice:":4" }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">{{ movie.title }}</h3>
+                        {% if movie.release_date %}
+                            <p class="movie-date">{{ movie.release_date }}</p>
+                        {% endif %}
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                {% if api_key_configured %}
+                    No movies available at the moment.
+                {% else %}
+                    Movies will appear here once the TMDB API key is configured.
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

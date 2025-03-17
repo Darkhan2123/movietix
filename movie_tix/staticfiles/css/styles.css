@@ -1,0 +1,1127 @@
+:root {
+    --primary: #ff0040;
+    --background: #0a0b14;
+    --surface: #141824;
+    --text: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Header */
+.header {
+    background-color: var(--background);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 32px;
+}
+
+.nav-links a {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover {
+    color: var(--primary);
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #ff1a54;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.inline-form {
+    display: inline;
+}
+
+/* Movie Hero Section */
+.movie-hero {
+    padding: 80px 0;
+    background-size: cover;
+    background-position: center;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+}
+
+.movie-content {
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+}
+
+.movie-poster {
+    width: 300px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.movie-poster img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.movie-info {
+    flex: 1;
+}
+
+.movie-info h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.release-date {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+}
+
+.book-btn {
+    display: inline-block;
+    font-size: 18px;
+    padding: 12px 24px;
+    font-weight: 600;
+}
+
+/* Movie Grid */
+.brand-section {
+    padding: 48px 0 24px;
+}
+
+.brand-title {
+    font-size: 48px;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.section-title {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 32px;
+    padding-top: 16px;
+}
+
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 24px;
+    padding: 24px 0;
+}
+
+.movie-card {
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    background-color: var(--surface);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.movie-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.movie-link {
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.movie-card .movie-poster {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.movie-card .movie-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Placeholder for missing movie posters */
+.movie-card .no-poster {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2c3e50, #4a5568);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.placeholder-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.movie-title-short {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.movie-year {
+    padding: 3px 10px;
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+/* Large placeholder for movie detail view */
+.no-poster-large {
+    width: 100%;
+    height: 100%;
+    min-height: 450px;
+    background: linear-gradient(135deg, #2c3e50, #4a5568);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.no-poster-large .movie-title-short {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.no-poster-large .movie-year {
+    font-size: 1.2rem;
+    padding: 5px 15px;
+}
+
+/* Error container for movie detail page */
+.error-container {
+    padding: 100px 20px;
+    text-align: center;
+}
+
+.error-container h1 {
+    margin-bottom: 30px;
+}
+
+.error-container .alert {
+    max-width: 600px;
+    margin: 0 auto 40px;
+}
+
+.movie-card .movie-info {
+    padding: 16px;
+    background-color: var(--surface);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.movie-card .movie-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.movie-card .movie-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+/* Overview Section */
+.overview-section {
+    padding: 48px 0;
+}
+
+.overview-section h2 {
+    font-size: 32px;
+    margin-bottom: 24px;
+}
+
+.overview-section p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+/* Trailer Section */
+.trailer-section {
+    padding: 48px 0;
+}
+
+.trailer-section h2 {
+    font-size: 32px;
+    margin-bottom: 24px;
+}
+
+.trailer-container {
+    margin-top: 24px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Search */
+.search-section {
+    padding: 48px 0;
+}
+
+.search-form {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 48px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 16px;
+    font-size: 16px;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 24px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 48px;
+    color: var(--text-secondary);
+    background-color: var(--surface);
+    border-radius: 8px;
+}
+
+/* Back Link */
+.back-link-container {
+    padding: 24px 0 48px;
+}
+
+.back-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.back-link:hover {
+    color: var(--primary);
+}
+
+.back-link:before {
+    content: "←";
+    margin-right: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .movie-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .movie-poster {
+        width: 200px;
+    }
+
+    .movie-info h1 {
+        font-size: 32px;
+    }
+
+    .search-form {
+        flex-direction: column;
+    }
+
+    .nav-container {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .section-title {
+        font-size: 24px;
+    }
+
+    .brand-title {
+        font-size: 36px;
+    }
+}
+
+/* Login/Register Forms */
+.login-wrapper,
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px);
+    padding: 48px 0;
+}
+
+.login-form-container,
+.auth-form-container {
+    background-color: var(--surface);
+    border-radius: 8px;
+    padding: 32px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.login-heading,
+.auth-title {
+    font-size: 24px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.form-field {
+    margin-bottom: 16px;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.form-field input {
+    width: 100%;
+    padding: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+}
+
+.form-field input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.login-btn,
+.auth-form button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: background-color 0.2s;
+}
+
+.login-btn:hover,
+.auth-form button:hover {
+    background-color: #ff1a54;
+}
+
+.register-text,
+.auth-links {
+    margin-top: 24px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.register-link,
+.auth-link {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.error-message {
+    color: #ff4d4d;
+    margin-top: 16px;
+    text-align: center;
+}
+
+/* Profile */
+.profile-container {
+    padding: 48px 0;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.profile-content {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 48px;
+    background-color: var(--surface);
+    padding: 24px;
+    border-radius: 8px;
+}
+
+.profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-info h3 {
+    font-size: 24px;
+    margin-bottom: 16px;
+}
+
+.profile-info p {
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+}
+
+.profile-update {
+    background-color: var(--surface);
+    padding: 24px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.section-subtitle {
+    font-size: 20px;
+    margin-bottom: 16px;
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.profile-links {
+    text-align: center;
+    margin-top: 24px;
+}
+
+/* Authentication Forms */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px);
+    padding: 48px 0;
+}
+
+.auth-form-container {
+    background-color: var(--surface);
+    border-radius: 8px;
+    padding: 32px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.auth-title {
+    font-size: 28px;
+    margin-bottom: 24px;
+    text-align: center;
+    color: var(--text);
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-field {
+    margin-bottom: 16px;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.form-field input {
+    width: 100%;
+    padding: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-size: 16px;
+}
+
+.form-field input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.btn-block {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    margin-top: 8px;
+}
+
+.auth-links {
+    margin-top: 24px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.auth-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    color: #ff4d4d;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.logout-message {
+    text-align: center;
+    margin-bottom: 24px;
+    color: var(--text-secondary);
+}
+
+/* File Input Styles */
+.form-field input[type="file"] {
+    padding: 0.5rem 1rem;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+/* For Chromium-based browsers & Safari */
+.form-field input[type="file"]::-webkit-file-upload-button {
+    background-color: var(--button-bg);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    margin-right: 10px; /* space between the button and filename text */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 4px;
+    font-family: inherit;
+}
+
+.form-field input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: var(--button-hover-bg);
+}
+
+/* Apply a base style to the entire input field */
+.form-field input[type="file"] {
+    padding: 0.5rem 1rem;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1rem;
+    /* This ensures the text next to the button also appears styled */
+}
+
+/* Use the ::file-selector-button pseudo-element for modern browsers (Firefox 98+, Chrome, etc.) */
+.form-field input[type="file"]::file-selector-button {
+    background-color: var(--button-bg); /* e.g. #ff0040 */
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    margin-right: 10px; /* space between the button and filename text */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 4px;
+    font-family: inherit; /* match your site’s font */
+}
+
+.form-field input[type="file"]::file-selector-button:hover {
+    background-color: var(--button-hover-bg); /* e.g. #ff1a57 */
+}
+
+/* Payment Form Styles */
+.booking-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+}
+
+.booking-section {
+    background-color: var(--surface);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    margin-bottom: 2rem;
+}
+
+.booking-details {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+@media (min-width: 992px) {
+    .booking-details {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.movie-info-card {
+    padding: 1.5rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.movie-info-card h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.movie-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.movie-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.movie-detail-item i {
+    color: var(--primary);
+    width: 1.25rem;
+    text-align: center;
+}
+
+.booking-summary-card {
+    padding: 1.5rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.booking-summary-card h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.summary-item.total {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    color: var(--text);
+}
+
+.student-price {
+    font-size: 0.9rem;
+    color: #28a745;
+}
+
+.divider {
+    height: 1px;
+    background-color: var(--border);
+    margin: 0.75rem 0;
+}
+
+.seat-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.seat-tag {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.student-discount-info {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: rgba(40, 167, 69, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+.discount-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.discount-percentage {
+    background-color: #28a745;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.discount-text {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.discount-savings {
+    font-weight: 600;
+    color: #28a745;
+    margin-bottom: 0.5rem;
+}
+
+.discount-note {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.discount-note i {
+    color: #ffc107;
+}
+
+/* Alert styles */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-warning {
+    color: #ffeb3b;
+    background-color: rgba(255, 235, 59, 0.1);
+    border-color: rgba(255, 235, 59, 0.2);
+}
+
+.alert-warning strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #ffc107;
+}
+
+.alert-warning p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.payment-section {
+    padding: 1.5rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+}
+
+.payment-section h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+}
+
+.payment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Student discount option */
+.student-discount-option {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.custom-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.custom-control-label {
+    color: var(--text);
+    cursor: pointer;
+}
+
+.student-id-field {
+    margin-top: 0.75rem;
+}
+
+.form-text {
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* Payment options */
+.payment-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.payment-option {
+    flex: 1 0 45%; /* Two cards per row, will wrap on small screens */
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.payment-option.active {
+    border-color: var(--primary);
+    background-color: rgba(255, 0, 64, 0.1);
+}
+
+.payment-option label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text);
+    cursor: pointer;
+    width: 100%;
+}
+
+.payment-option input[type="radio"] {
+    margin: 0;
+}
+
+.payment-option i {
+    font-size: 1.25rem;
+    color: var(--primary);
+}
+
+/* Credit card form */
+.credit-card-form {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.card-input-container {
+    position: relative;
+}
+
+.card-icons {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 0.5rem;
+}
+
+.card-icons i {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+}
+
+.cvv-container {
+    position: relative;
+}
+
+.cvv-help {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    cursor: help;
+}
+
+/* Terms and conditions */
+.terms-conditions {
+    margin: 1rem 0;
+}
+
+.terms-conditions a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.terms-conditions a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .payment-option {
+        flex: 1 0 100%; /* One card per row on small screens */
+    }
+    
+    .form-row {
+        flex-direction: column;
+    }
+}
+
+/* Alert styles */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-warning {
+    color: #ffeb3b;
+    background-color: rgba(255, 235, 59, 0.1);
+    border-color: rgba(255, 235, 59, 0.2);
+}
+
+.alert-warning strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #ffc107;
+}
+
+.alert-warning p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.8);
+}

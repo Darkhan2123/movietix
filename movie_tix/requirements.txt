@@ -1,0 +1,18 @@
+# Core dependencies
+Django==5.1.7
+stripe==8.4.0
+reportlab==4.1.0
+pillow==10.2.0
+requests==2.32.0
+qrcode==7.4.2
+python-dotenv==1.0.1
+django-ses==4.4.0
+boto3==1.37.13
+
+# For background task processing
+celery==5.4.0
+redis==5.2.1
+
+# Optional
+# django-celery-results==2.5.1
+# django-celery-beat==2.5.0

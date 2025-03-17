@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Debug Information{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Debug Information</h1>
+    
+    <h2>Static Files Configuration</h2>
+    <ul>
+        <li><strong>STATIC_URL:</strong> {{ static_url }}</li>
+        <li><strong>STATIC_ROOT:</strong> {{ static_root }}</li>
+        <li><strong>STATICFILES_DIRS:</strong>
+            <ul>
+                {% for dir in staticfiles_dirs %}
+                <li>{{ dir }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+    
+    <h2>Media Files Configuration</h2>
+    <ul>
+        <li><strong>MEDIA_URL:</strong> {{ media_url }}</li>
+        <li><strong>MEDIA_ROOT:</strong> {{ media_root }}</li>
+    </ul>
+    
+    <h2>Template Information</h2>
+    <ul>
+        <li><strong>Base Template Path:</strong> {{ base_template_path }}</li>
+    </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+<!-- Template: bookings\templates\bookings\select_date_time.html -->
+
+
+{% block title %}Select Date & Time - {{ movie.title }} - MovieTime{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="booking-title">{{ movie.title }}</h1>
+
+    <section class="booking-section">
+        <h2 class="section-title">Select Date & Time</h2>
+
+        <div class="date-selector">
+            {% for date in dates %}
+            <div class="date-card {% if forloop.first %}active{% endif %}" data-date="{{ date|date:'Y-m-d' }}">
+                <div class="date-day">{{ date|date:'D' }}</div>
+                <div class="date-number">{{ date|date:'d' }}</div>
+                <div class="date-month">{{ date|date:'M' }}</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <form method="post" id="showtime-form">
+            {% csrf_token %}
+
+            {% for date in dates %}
+            <div class="time-selector" id="date-{{ date|date:'Y-m-d' }}" {% if not forloop.first %}style="display: none;"{% endif %}>
+                <h3 class="date-heading">{{ date|date:"l, F j, Y" }}</h3>
+
+                <div class="time-cards">
+                    {% for showtime in showtimes %}
+                        {% if showtime.date == date %}
+                        <div class="time-card-wrapper">
+                            <input type="radio" name="showtime" id="showtime-{{ showtime.id }}" value="{{ showtime.id }}" class="time-radio" {% if forloop.first and forloop.parentloop.first %}checked{% endif %}>
+                            <label for="showtime-{{ showtime.id }}" class="time-card">
+                                {{ showtime.time|time:"g:i A" }}
+                                <span class="price">${{ showtime.price }}</span>
+                            </label>
+                        </div>
+                        {% endif %}
+                    {% empty %}
+                    <p class="empty-state">No showtimes available for this date.</p>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Continue to Seats</button>
+            </div>
+        </form>
+    </section>
+
+    <div class="back-link-container">
+        <a href="{% url 'movies:movie_detail' movie.tmdb_id %}" class="back-link">Back to Movie</a>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Date selection
+        const dateCards = document.querySelectorAll('.date-card');
+        dateCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove active class from all date cards
+                dateCards.forEach(c => c.classList.remove('active'));
+
+                // Add active class to clicked card
+                this.classList.add('active');
+
+                // Hide all time selectors
+                const timeSelectors = document.querySelectorAll('.time-selector');
+                timeSelectors.forEach(selector => {
+                    selector.style.display = 'none';
+                });
+
+                // Show time selector for selected date
+                const dateValue = this.getAttribute('data-date');
+                const timeSelector = document.getElementById(`date-${dateValue}`);
+                if (timeSelector) {
+                    timeSelector.style.display = 'block';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

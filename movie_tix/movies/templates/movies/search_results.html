@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+<!-- Template: movies\templates\movies\search_results.html -->
+
+
+{% block title %}Search Movies - MovieTime{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="search-section">
+        <h1>Search Movies</h1>
+
+        <form method="get" action="{% url 'movies:search_results' %}" class="search-form">
+            <input
+                type="text"
+                name="q"
+                value="{{ query }}"
+                placeholder="Search movies..."
+                class="search-input"
+                required
+            >
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        {% if query %}
+        <div class="search-results">
+            <h2>Results for "{{ query }}"</h2>
+
+            {% if results %}
+            <div class="results-grid">
+                {% for movie in results %}
+                <div class="movie-card">
+                    <a href="{% url 'movies:movie_detail' movie.id %}" class="movie-link">
+                        <div class="movie-poster">
+                            <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
+                        </div>
+                        <div class="movie-info">
+                            <h3 class="movie-title">{{ movie.title }}</h3>
+                            <p class="movie-date">{{ movie.release_date }}</p>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">No results found for "{{ query }}"</div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

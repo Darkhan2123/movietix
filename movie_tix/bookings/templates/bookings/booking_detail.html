@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+<!-- Template: bookings\templates\bookings\booking_detail.html -->
+{% block header_content %}
+    {% if not print_mode %}
+        {{ block.super }}
+    {% endif %}
+{% endblock %}
+
+{% block title %}Booking Confirmation - MovieTime{% endblock %}
+
+{% block content %}
+<div class="container booking-container">
+    <div class="booking-confirmation">
+        <div class="confirmation-header">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1>Booking Confirmed!</h1>
+            <p>Your tickets have been booked successfully and sent to your email.</p>
+        </div>
+
+        <div class="ticket-container">
+            <div class="ticket">
+                <div class="ticket-header">
+                    <div class="ticket-movie-info">
+                        <h2>{{ booking.showtime.movie.title }}</h2>
+                        <div class="ticket-id">Booking #{{ booking.booking_reference }}</div>
+                    </div>
+                    <div class="ticket-logo">
+                        <i class="fas fa-film"></i> MovieTime
+                    </div>
+                </div>
+
+                <div class="ticket-content">
+                    <div class="ticket-details">
+                        <div class="detail-column">
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-calendar-alt"></i></div>
+                                <div class="detail-info">
+                                    <span class="detail-label">Date</span>
+                                    <span class="detail-value">{{ booking.showtime.date|date:"l, F j, Y" }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-clock"></i></div>
+                                <div class="detail-info">
+                                    <span class="detail-label">Time</span>
+                                    <span class="detail-value">{{ booking.showtime.time|time:"g:i A" }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-column">
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                <div class="detail-info">
+                                    <span class="detail-label">Theater</span>
+                                    <span class="detail-value">{{ booking.showtime.theater.name }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-icon"><i class="fas fa-couch"></i></div>
+                                <div class="detail-info">
+                                    <span class="detail-label">Seats</span>
+                                    <span class="detail-value">{{ booking.get_seats_display }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ticket-qr">
+                        <div class="qr-code">
+                            <!-- Placeholder for QR code -->
+                            <div class="qr-placeholder">
+                                <i class="fas fa-qrcode"></i>
+                            </div>
+                        </div>
+                        <div class="qr-instruction">Scan at the theater entrance</div>
+                    </div>
+                </div>
+
+                <div class="ticket-tear">
+                    <div class="tear-line"></div>
+                </div>
+
+                <div class="ticket-footer">
+                    <div class="footer-item">
+                        <span class="footer-label">Total Amount:</span>
+                        <span class="footer-value">${{ booking.total_price }}</span>
+                    </div>
+                    <div class="footer-item">
+                        <span class="footer-label">Booking Date:</span>
+                        <span class="footer-value">{{ booking.booking_time|date:"F j, Y, g:i A" }}</span>
+                    </div>
+                    {% if booking.payment_method %}
+                    <div class="footer-item">
+                        <span class="footer-label">Payment Method:</span>
+                        <span class="footer-value">{{ booking.get_payment_method_display }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="confirmation-actions">
+            <a href="{% url 'bookings:download_ticket' booking.id %}" class="btn btn-secondary action-btn">
+                <i class="fas fa-download"></i> Download Ticket
+            </a>
+            <a href="{% url 'bookings:my_bookings' %}" class="btn btn-primary action-btn">
+                <i class="fas fa-ticket-alt"></i> My Bookings
+            </a>
+            <a href="{% url 'movies:movie_list' %}" class="btn btn-secondary action-btn">
+                <i class="fas fa-film"></i> Browse Movies
+            </a>
+        </div>
+
+        <div class="booking-notes">
+            <div class="note-item">
+                <i class="fas fa-info-circle"></i>
+                <span>Please arrive 15 minutes before the show time</span>
+            </div>
+            <div class="note-item">
+                <i class="fas fa-envelope"></i>
+                <span>A copy of this ticket has been sent to your email</span>
+            </div>
+            <div class="note-item">
+                <i class="fas fa-phone"></i>
+                <span>For assistance, contact: support@movietime.com</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
