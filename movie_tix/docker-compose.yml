@@ -8,10 +8,10 @@ services:
       - "8000:8000"
     volumes:
       - .:/app
-    env_file:
-      - .env
     depends_on:
       - redis
+    env_file:
+      - .env
 
   redis:
     image: redis:7
@@ -24,7 +24,7 @@ services:
     command: celery -A movie_tix worker --loglevel=info
     volumes:
       - .:/app
-    env_file:
-      - .env
     depends_on:
       - redis
+    env_file:
+      - .env
