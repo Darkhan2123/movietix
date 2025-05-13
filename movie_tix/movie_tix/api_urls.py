@@ -24,6 +24,4 @@ urlpatterns = [
     path('auth/logout/', LogoutView.as_view(), name='api-logout'),
     path('auth/register/', RegisterView.as_view(), name='api-register'),
     path('auth/token/', CustomAuthToken.as_view(), name='api-token'),
-    # DRF browsable API authentication
-    path('auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
