@@ -1,6 +1,6 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core.mail import send_mail
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.conf import settings
 import logging
 import os
@@ -25,8 +25,12 @@ def home_view(request):
         # Redirect to movie list for authenticated users
         return redirect('movies:movie_list')
     else:
-        # Show landing page for anonymous users
-        return render(request, 'landing.html')
+        # Return basic info for anonymous users
+        return JsonResponse({
+            'message': 'Welcome to MovieTix API',
+            'authenticated': False,
+            'api_docs': f"{request.build_absolute_uri('/swagger/')}"
+        })
 
 def debug_view(request):
     """
@@ -35,10 +39,9 @@ def debug_view(request):
     context = {
         'static_url': settings.STATIC_URL,
         'static_root': getattr(settings, 'STATIC_ROOT', 'Not set'),
-        'staticfiles_dirs': settings.STATICFILES_DIRS,
+        'staticfiles_dirs': list(map(str, settings.STATICFILES_DIRS)),
         'media_url': settings.MEDIA_URL,
-        'media_root': settings.MEDIA_ROOT,
-        'base_template_path': os.path.join(settings.BASE_DIR, 'templates', 'base.html'),
+        'media_root': str(settings.MEDIA_ROOT),
     }
     
-    return render(request, 'debug.html', context)
+    return JsonResponse(context)

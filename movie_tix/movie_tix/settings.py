@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_yasg',
+    'corsheaders',  # Add CORS headers support
 
     # Local apps
     'users',
@@ -39,12 +40,17 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Add CORS middleware before CommonMiddleware
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# CORS settings for Next.js frontend
+CORS_ALLOW_ALL_ORIGINS = DEBUG  # In development, allow all origins
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:3000').split(',')
 
 # Debug Toolbar (only in DEBUG mode)
 if DEBUG:
@@ -57,11 +63,12 @@ if DEBUG:
 
 ROOT_URLCONF = 'movie_tix.urls'
 
+# Removing Django templates configuration as we're transitioning to Next.js
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
+        'DIRS': [],  # Empty list since we're not using Django templates
+        'APP_DIRS': True,  # Keep True to maintain admin functionality
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -92,6 +99,32 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{asctime} [{levelname}] {name}: {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file'],
+        'level': 'INFO',
+    },
+}
+
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -108,9 +141,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default auto field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Login redirect
-LOGIN_REDIRECT_URL = 'home'
 
 # TMDB API key
 TMDB_API_KEY = os.environ.get('TMDB_API_KEY')
@@ -149,6 +179,9 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
 }
 
 # Swagger config
@@ -170,3 +203,6 @@ SWAGGER_SETTINGS = {
 
 # Project site URL for emails
 SITE_URL = os.environ.get('SITE_URL', 'http://127.0.0.1:8000')
+
+# Next.js frontend URL
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:3000')

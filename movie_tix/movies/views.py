@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from django.http import JsonResponse
 from django.conf import settings
 import os
 from .tmdb_api import fetch_popular_movies, fetch_movie_details, search_movies
 
 def movie_list_view(request):
     """
-    View to display a list of popular movies.
+    API view to provide a list of popular movies.
     """
     # Check if TMDB API key is configured
     api_key = settings.TMDB_API_KEY or os.environ.get('TMDB_API_KEY', '')
@@ -25,13 +25,12 @@ def movie_list_view(request):
         # Create sample movies for development
         movies = _get_mock_movies(12)
     
-    # Add context for template to show API key message if needed
-    context = {
+    # Return data as JSON
+    return JsonResponse({
         'movies': movies,
         'api_key_configured': bool(api_key),
         'api_working': api_working,
-    }
-    return render(request, 'movies/movie_list.html', context)
+    })
 
 def _get_mock_movies(count=9):
     """Generate mock movie data for development when API is unavailable"""
@@ -64,7 +63,7 @@ def _get_mock_movies(count=9):
 
 def movie_detail_view(request, tmdb_id):
     """
-    View to display details of a specific movie.
+    API view to provide details of a specific movie.
     """
     details = fetch_movie_details(tmdb_id)
     
@@ -97,18 +96,17 @@ def movie_detail_view(request, tmdb_id):
     # If still no details, show error
     if not details:
         api_key = settings.TMDB_API_KEY or os.environ.get('TMDB_API_KEY', '')
-        context = {
+        return JsonResponse({
             'error': 'Movie details not available.',
             'api_key_configured': bool(api_key),
-        }
-        return render(request, 'movies/movie_detail.html', context)
+        }, status=404)
         
-    return render(request, 'movies/movie_detail.html', {'movie': details})
+    return JsonResponse({'movie': details})
 
 def search_results_view(request):
     """
-    View to handle movie search queries.
+    API view to handle movie search queries.
     """
     query = request.GET.get('q', '')
     results = search_movies(query) if query else []
-    return render(request, 'movies/search_results.html', {'query': query, 'results': results})
+    return JsonResponse({'query': query, 'results': results})
